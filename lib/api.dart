@@ -4,7 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 ValueNotifier<GraphQLClient> client = ValueNotifier(
   GraphQLClient(
     cache: InMemoryCache(),
-    link: HttpLink(uri: 'http://localhost:3000'),
+    link: HttpLink(uri: 'http://10.0.2.2:3000'),
   ),
 );
 
@@ -19,7 +19,7 @@ query {
 """;
 
 final String createTaskMutation = """
-mutation {
+mutation CreateTodo(\$id: ID!, \$title: String!) {
   createTodo(id: \$id, title: \$title, completed: false) {
     id
   }
@@ -27,8 +27,9 @@ mutation {
 """;
 
 final String updateTaskMutation = """
-mutation {
+mutation UpdateTodo(\$id: ID!, \$completed: Boolean!) {
   updateTodo(id: \$id, completed: \$completed) {
     id
+  }
 }
 """;

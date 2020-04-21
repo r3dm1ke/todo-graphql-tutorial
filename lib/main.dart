@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:todo_graphql_tutorial/task.dart';
+import 'package:todo_graphql_tutorial/api.dart';
 
 void main() => runApp(TodoApp());
 
@@ -12,12 +14,15 @@ class TodoApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TODO App With GraphQL',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return GraphQLProvider(
+      child: MaterialApp(
+        title: 'TODO App With GraphQL',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: ListPage(),
       ),
-      home: ListPage(),
+      client: client
     );
   }
 }
@@ -41,11 +46,11 @@ class _ListPageState extends State<ListPage> {
             children: <Widget>[
               new Expanded(
                   child: new TextField(
-                    autofocus: true,
-                    decoration: new InputDecoration(
-                        labelText: 'Task description', hintText: 'Do stuff'),
-                    onChanged: (value) {},
-                  ))
+                autofocus: true,
+                decoration: new InputDecoration(
+                    labelText: 'Task description', hintText: 'Do stuff'),
+                onChanged: (value) {},
+              ))
             ],
           ),
           actions: <Widget>[
@@ -68,7 +73,8 @@ class _ListPageState extends State<ListPage> {
         title: Text("TODO App With GraphQL"),
       ),
       body: Center(
-        child: TaskList(list: tempTasks, onToggleItem: (index) => this.onToggle(index)),
+        child: TaskList(
+            list: tempTasks, onToggleItem: (index) => this.onToggle(index)),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => this.onCreate(context),
@@ -89,11 +95,13 @@ class TaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return ListView.builder(
-      itemBuilder: (context, index) {
-        final task = this.list[index];
-        return CheckboxListTile(title: Text(task.title), value: task.completed, onChanged: (_) => this.onToggleItem(index));
-      },
-      itemCount: this.list.length
-    );
+        itemBuilder: (context, index) {
+          final task = this.list[index];
+          return CheckboxListTile(
+              title: Text(task.title),
+              value: task.completed,
+              onChanged: (_) => this.onToggleItem(index));
+        },
+        itemCount: this.list.length);
   }
 }
